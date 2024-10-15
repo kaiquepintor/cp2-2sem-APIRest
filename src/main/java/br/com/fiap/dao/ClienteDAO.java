@@ -99,8 +99,10 @@ public class ClienteDAO {
             stmt.setString(5, cliente.getTipo().name());
             stmt.setInt(6, cliente.getId());
 
+            System.out.println("Atualizando cliente: " + cliente);
             stmt.executeUpdate();
         } catch (SQLException e) {
+            System.err.println("Erro ao atualizar cliente: " + e.getMessage());
             e.printStackTrace();
         }
     }

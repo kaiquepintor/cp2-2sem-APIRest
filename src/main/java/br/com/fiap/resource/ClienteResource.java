@@ -11,7 +11,7 @@ import jakarta.ws.rs.core.UriInfo;
 import java.util.Date;
 import java.util.List;
 
-@Path("/clientes")
+@Path("/cliente")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ClienteResource {
@@ -21,10 +21,15 @@ public class ClienteResource {
     // POST /clientes - Criar um novo cliente
     @POST
     public Response criarCliente(Cliente cliente, @Context UriInfo uriInfo) {
-        cliente.setDataCadastro(new Date()); // Define a data de cadastro como a data atual
-        clienteDAO.cadastrar(cliente);
-        UriBuilder builder = uriInfo.getAbsolutePathBuilder();
-        return Response.created(builder.path(Integer.toString(cliente.getId())).build()).entity(cliente).build();
+        try {
+            cliente.setDataCadastro(new Date()); // Define a data de cadastro como a data atual
+            clienteDAO.cadastrar(cliente);
+            UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+            return Response.created(builder.path(Integer.toString(cliente.getId())).build()).entity(cliente).build();
+        } catch (Exception e) {
+            e.printStackTrace(); // Imprime o stack trace no console
+            return Response.serverError().entity("Erro ao criar cliente: " + e.getMessage()).build();
+        }
     }
 
     // GET /clientes/{id} - Retornar um cliente específico
@@ -50,8 +55,11 @@ public class ClienteResource {
     @PUT
     @Path("/{id}")
     public Response atualizarCliente(@PathParam("id") int id, Cliente clienteAtualizado) {
+        System.out.println("Atualizando cliente com ID: " + id);
+        System.out.println("Dados recebidos: " + clienteAtualizado);
         Cliente cliente = clienteDAO.pesquisarPorId(id);
         if (cliente != null) {
+            // Atualiza os dados do cliente
             cliente.setNome(clienteAtualizado.getNome());
             cliente.setEmail(clienteAtualizado.getEmail());
             cliente.setTelefone(clienteAtualizado.getTelefone());
@@ -60,6 +68,7 @@ public class ClienteResource {
             clienteDAO.atualizar(cliente);
             return Response.ok(cliente).build();
         } else {
+            System.out.println("Cliente não encontrado com ID: " + id);
             return Response.status(Response.Status.NOT_FOUND).entity("Cliente não encontrado").build();
         }
     }
