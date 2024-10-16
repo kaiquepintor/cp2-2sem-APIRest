@@ -8,7 +8,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
-import java.util.Date;
 import java.util.List;
 
 @Path("/cliente")
@@ -22,7 +21,6 @@ public class ClienteResource {
     @POST
     public Response criarCliente(Cliente cliente, @Context UriInfo uriInfo) {
         try {
-            cliente.setDataCadastro(new Date()); // Define a data de cadastro como a data atual
             clienteDAO.cadastrar(cliente);
             UriBuilder builder = uriInfo.getAbsolutePathBuilder();
             return Response.created(builder.path(Integer.toString(cliente.getId())).build()).entity(cliente).build();
@@ -55,16 +53,18 @@ public class ClienteResource {
     @PUT
     @Path("/{id}")
     public Response atualizarCliente(@PathParam("id") int id, Cliente clienteAtualizado) {
-        System.out.println("Atualizando cliente com ID: " + id);
+        System.out.println("Recebendo solicitação para atualizar o cliente com ID: " + id);
         System.out.println("Dados recebidos: " + clienteAtualizado);
+
         Cliente cliente = clienteDAO.pesquisarPorId(id);
         if (cliente != null) {
             // Atualiza os dados do cliente
             cliente.setNome(clienteAtualizado.getNome());
             cliente.setEmail(clienteAtualizado.getEmail());
             cliente.setTelefone(clienteAtualizado.getTelefone());
-            cliente.setDataCadastro(clienteAtualizado.getDataCadastro());
             cliente.setTipo(clienteAtualizado.getTipo());
+
+            System.out.println("Atualizando cliente com os seguintes dados: " + cliente);
             clienteDAO.atualizar(cliente);
             return Response.ok(cliente).build();
         } else {

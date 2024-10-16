@@ -11,8 +11,8 @@ public class ClienteDAO {
 
     // Método para cadastrar um cliente
     public int cadastrar(Cliente cliente) {
-        String sql = "INSERT INTO T_CP_CLIENTE (id, nome, email, telefone, data_cadastro, tipo) " +
-                "VALUES (CLIENTE_SEQ.NEXTVAL, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO T_CP_CLIENTE (id, nome, email, telefone, tipo) " +
+                "VALUES (CLIENTE_SEQ.NEXTVAL, ?, ?, ?, ?)";
         int idGerado = -1;
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -20,8 +20,7 @@ public class ClienteDAO {
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getEmail());
             stmt.setString(3, cliente.getTelefone());
-            stmt.setDate(4, new java.sql.Date(cliente.getDataCadastro().getTime()));
-            stmt.setString(5, cliente.getTipo().name());
+            stmt.setString(4, cliente.getTipo().name());
 
             stmt.executeUpdate();
 
@@ -51,7 +50,6 @@ public class ClienteDAO {
                 cliente.setNome(rs.getString("nome"));
                 cliente.setEmail(rs.getString("email"));
                 cliente.setTelefone(rs.getString("telefone"));
-                cliente.setDataCadastro(rs.getDate("data_cadastro"));
                 cliente.setTipo(Cliente.TipoCliente.valueOf(rs.getString("tipo")));
                 clientes.add(cliente);
             }
@@ -76,7 +74,6 @@ public class ClienteDAO {
                     cliente.setNome(rs.getString("nome"));
                     cliente.setEmail(rs.getString("email"));
                     cliente.setTelefone(rs.getString("telefone"));
-                    cliente.setDataCadastro(rs.getDate("data_cadastro"));
                     cliente.setTipo(Cliente.TipoCliente.valueOf(rs.getString("tipo")));
                 }
             }
@@ -88,18 +85,17 @@ public class ClienteDAO {
 
     // Método para atualizar um cliente existente
     public void atualizar(Cliente cliente) {
-        String sql = "UPDATE T_CP_CLIENTE SET nome = ?, email = ?, telefone = ?, data_cadastro = ?, tipo = ? WHERE id = ?";
+        String sql = "UPDATE T_CP_CLIENTE SET nome = ?, email = ?, telefone = ?, tipo = ? WHERE id = ?";
         try (Connection connection = ConnectionFactory.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getEmail());
             stmt.setString(3, cliente.getTelefone());
-            stmt.setDate(4, new java.sql.Date(cliente.getDataCadastro().getTime()));
-            stmt.setString(5, cliente.getTipo().name());
-            stmt.setInt(6, cliente.getId());
+            stmt.setString(4, cliente.getTipo().name());
+            stmt.setInt(5, cliente.getId());
 
-            System.out.println("Atualizando cliente: " + cliente);
+            System.out.println("Executando atualização para o cliente: " + cliente.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Erro ao atualizar cliente: " + e.getMessage());

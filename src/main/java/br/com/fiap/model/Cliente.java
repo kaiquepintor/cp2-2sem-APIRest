@@ -1,13 +1,10 @@
 package br.com.fiap.model;
 
-import java.util.Date;
-
 public class Cliente {
     private int id;
     private String nome;
     private String email;
     private String telefone;
-    private Date dataCadastro;
     private TipoCliente tipo;
 
     // Enumerador para Tipo de Cliente
@@ -19,12 +16,11 @@ public class Cliente {
     // Construtores
     public Cliente() {}
 
-    public Cliente(int id, String nome, String email, String telefone, Date dataCadastro, TipoCliente tipo) {
+    public Cliente(int id, String nome, String email, String telefone, TipoCliente tipo) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.telefone = telefone;
-        this.dataCadastro = dataCadastro;
         this.tipo = tipo;
     }
 
@@ -61,14 +57,6 @@ public class Cliente {
         this.telefone = telefone;
     }
 
-    public Date getDataCadastro() {
-        return dataCadastro;
-    }
-
-    public void setDataCadastro(Date dataCadastro) {
-        this.dataCadastro = dataCadastro;
-    }
-
     public TipoCliente getTipo() {
         return tipo;
     }
@@ -84,7 +72,6 @@ public class Cliente {
                 ", nome='" + nome + '\'' +
                 ", email='" + email + '\'' +
                 ", telefone='" + telefone + '\'' +
-                ", dataCadastro=" + dataCadastro +
                 ", tipo=" + tipo +
                 '}';
     }
