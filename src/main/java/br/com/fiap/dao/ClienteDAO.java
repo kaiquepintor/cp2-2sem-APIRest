@@ -9,13 +9,12 @@ import java.util.List;
 
 public class ClienteDAO {
 
-    // Método para cadastrar um cliente
-    public int cadastrar(Cliente cliente) {
+    // Método de cadastrar cliente
+    public void cadastrar(Cliente cliente) {
         String sql = "INSERT INTO T_CP_CLIENTE (id, nome, email, telefone, tipo) " +
                 "VALUES (CLIENTE_SEQ.NEXTVAL, ?, ?, ?, ?)";
-        int idGerado = -1;
         try (Connection connection = ConnectionFactory.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getEmail());
@@ -23,20 +22,12 @@ public class ClienteDAO {
             stmt.setString(4, cliente.getTipo().name());
 
             stmt.executeUpdate();
-
-            try (ResultSet rs = stmt.getGeneratedKeys()) {
-                if (rs.next()) {
-                    idGerado = rs.getInt(1);
-                    cliente.setId(idGerado); // Atualiza o ID no objeto cliente
-                }
-            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return idGerado;
     }
 
-    // Método para listar todos os clientes
+    // Método de listar clientes
     public List<Cliente> listar() {
         List<Cliente> clientes = new ArrayList<>();
         String sql = "SELECT * FROM T_CP_CLIENTE";
@@ -59,7 +50,7 @@ public class ClienteDAO {
         return clientes;
     }
 
-    // Método para pesquisar cliente por ID
+    // Método de pesquisar por ID
     public Cliente pesquisarPorId(int id) {
         Cliente cliente = null;
         String sql = "SELECT * FROM T_CP_CLIENTE WHERE id = ?";
@@ -83,7 +74,7 @@ public class ClienteDAO {
         return cliente;
     }
 
-    // Método para atualizar um cliente existente
+    // Método de atualizar cliente
     public void atualizar(Cliente cliente) {
         String sql = "UPDATE T_CP_CLIENTE SET nome = ?, email = ?, telefone = ?, tipo = ? WHERE id = ?";
         try (Connection connection = ConnectionFactory.getConnection();
@@ -103,7 +94,7 @@ public class ClienteDAO {
         }
     }
 
-    // Método para remover um cliente por ID
+    // Método de revover cliente
     public void remover(int id) {
         String sql = "DELETE FROM T_CP_CLIENTE WHERE id = ?";
         try (Connection connection = ConnectionFactory.getConnection();

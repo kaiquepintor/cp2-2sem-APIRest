@@ -1,0 +1,21 @@
+DROP TABLE T_CP_CLIENTE;
+
+DROP SEQUENCE CLIENTE_SEQ;
+
+CREATE SEQUENCE CLIENTE_SEQ START WITH 1 INCREMENT BY 1;
+
+CREATE TABLE T_CP_CLIENTE (
+    id NUMBER PRIMARY KEY,
+    nome VARCHAR2(100) NOT NULL,
+    email VARCHAR2(100) NOT NULL,
+    telefone VARCHAR2(20),
+    tipo VARCHAR2(20)
+);
+
+INSERT INTO T_CP_CLIENTE (id, nome, email, telefone, tipo)
+VALUES (CLIENTE_SEQ.NEXTVAL, 'João Silva', 'joao.silva@gmail.com', '(11) 99999-9999', 'INDIVIDUAL');
+
+INSERT INTO T_CP_CLIENTE (id, nome, email, telefone, tipo)
+VALUES (CLIENTE_SEQ.NEXTVAL, 'Maria Oliveira', 'maria.oliveira@gmail.com', '(21) 98888-8888', 'CORPORATIVO');
+
+COMMIT;

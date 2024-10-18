@@ -17,55 +17,56 @@ public class ClienteResource {
 
     private ClienteDAO clienteDAO = new ClienteDAO();
 
-    // POST /clientes - Criar um novo cliente
+    // POST - Criar cliente
     @POST
     public Response criarCliente(Cliente cliente, @Context UriInfo uriInfo) {
         try {
             clienteDAO.cadastrar(cliente);
             UriBuilder builder = uriInfo.getAbsolutePathBuilder();
+            System.out.println("Cliente Criado:\n" + cliente.toString());
             return Response.created(builder.path(Integer.toString(cliente.getId())).build()).entity(cliente).build();
         } catch (Exception e) {
-            e.printStackTrace(); // Imprime o stack trace no console
+            e.printStackTrace();
             return Response.serverError().entity("Erro ao criar cliente: " + e.getMessage()).build();
         }
     }
 
-    // GET /clientes/{id} - Retornar um cliente específico
+    // GET - Cliente específico
     @GET
     @Path("/{id}")
     public Response getCliente(@PathParam("id") int id) {
         Cliente cliente = clienteDAO.pesquisarPorId(id);
         if (cliente != null) {
+            System.out.println("Cliente:\n" + cliente.toString());
             return Response.ok(cliente).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).entity("Cliente não encontrado").build();
         }
     }
 
-    // GET /clientes - Retornar todos os clientes
+    // GET - Listar clientes
     @GET
     public Response getTodosClientes() {
         List<Cliente> clientes = clienteDAO.listar();
+        System.out.println("Lista de Clientes:\n" + clientes.toString());
         return Response.ok(clientes).build();
+
     }
 
-    // PUT /clientes/{id} - Atualizar um cliente existente
+    // PUT - Atualizar cliente
     @PUT
     @Path("/{id}")
     public Response atualizarCliente(@PathParam("id") int id, Cliente clienteAtualizado) {
-        System.out.println("Recebendo solicitação para atualizar o cliente com ID: " + id);
-        System.out.println("Dados recebidos: " + clienteAtualizado);
-
         Cliente cliente = clienteDAO.pesquisarPorId(id);
         if (cliente != null) {
-            // Atualiza os dados do cliente
+
             cliente.setNome(clienteAtualizado.getNome());
             cliente.setEmail(clienteAtualizado.getEmail());
             cliente.setTelefone(clienteAtualizado.getTelefone());
             cliente.setTipo(clienteAtualizado.getTipo());
 
-            System.out.println("Atualizando cliente com os seguintes dados: " + cliente);
             clienteDAO.atualizar(cliente);
+            System.out.println("Cliente Atualizado:\n" + cliente.toString());
             return Response.ok(cliente).build();
         } else {
             System.out.println("Cliente não encontrado com ID: " + id);
@@ -73,13 +74,14 @@ public class ClienteResource {
         }
     }
 
-    // DELETE /clientes/{id} - Remover um cliente
+    // DELETE - Remover cliente
     @DELETE
     @Path("/{id}")
     public Response removerCliente(@PathParam("id") int id) {
         Cliente cliente = clienteDAO.pesquisarPorId(id);
         if (cliente != null) {
             clienteDAO.remover(id);
+            System.out.println("Cliente Removido:\n" + cliente.toString());
             return Response.noContent().build();
         } else {
             return Response.status(Response.Status.NOT_FOUND).entity("Cliente não encontrado").build();

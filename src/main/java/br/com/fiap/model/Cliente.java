@@ -7,7 +7,6 @@ public class Cliente {
     private String telefone;
     private TipoCliente tipo;
 
-    // Enumerador para Tipo de Cliente
     public enum TipoCliente {
         INDIVIDUAL,
         CORPORATIVO
@@ -67,12 +66,10 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return "Cliente{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", email='" + email + '\'' +
-                ", telefone='" + telefone + '\'' +
-                ", tipo=" + tipo +
-                '}';
+        return  "ID       - " + id + "\n" +
+                "NOME     - " + nome + "\n" +
+                "EMAIL    - " + email + "\n" +
+                "TELEFONE - " + telefone + "\n" +
+                "TIPO     - " + tipo + "\n";
     }
 }
